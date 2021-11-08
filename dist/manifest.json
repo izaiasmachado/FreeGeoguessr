@@ -1,0 +1,15 @@
+{
+	"name": "FreeGeoguessr",
+	"version": "0.4",
+	"manifest_version": 2,
+	"content_scripts": [{
+        "matches": ["https://www.geoguessr.com/*"],
+        "js": ["index.js"]
+    }, {
+        "matches": ["https://www.geoguessr.com/profile/set-password/*"],
+        "js": ["injectpassword.js"]
+    }],
+    "icons": {
+        "128": "icons/icon128.png"
+    }
+}
