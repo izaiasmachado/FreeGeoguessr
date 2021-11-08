@@ -8599,72 +8599,8 @@ function extend() {
 }
 
 },{}],39:[function(require,module,exports){
-const axios = require('axios')
-const TmpMail = require('tmpmail')
-const expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi
-
-document.addEventListener("keydown", function(event) {
-    if (event.altKey && event.code === "KeyG") {
-        console.log('[GEOCALOTE]: Captured shortcut keydown')
-        generateAccount()
-        event.preventDefault()
-    }
-});
-
-var interval = setInterval(checkGenerationAccountConditions , 250)
-function checkGenerationAccountConditions () {
-    const generateCondition = window.document.body.innerHTML.indexOf('>Become a Pro member</h2>') !== -1 || window.document.body.innerHTML.indexOf('>Create account to play</h2>') !== -1    
-    if (generateCondition) {
-        console.log('[GEOCALOTE]: Generating conditions matched')
-        generateAccount()
-        return stopFunction()
-    }
-    
-    function stopFunction() {
-        clearInterval(interval);
-    }
-}
-
-async function generateAccount () {    
-    const client = TmpMail.Create()
-    return client.on('ready', async email => {
-        console.log('[GEOCALOTE]: Temp mail is ready')
-        await sendEmail(email)
-        return await verifyIfReceived()
-    })
-
-    async function sendEmail(email) {
-        console.log('[GEOCALOTE]: Signing up with as', email)
-        await axios.post('https://www.geoguessr.com/api/v3/accounts/signup', { email })
-    }
-
-    async function verifyIfReceived() {
-        console.log('[GEOCALOTE]: Verifying temp mail inbox')
-
-        return client.startMessageListener(500, messages => {
-            if (messages.length > 0) {
-                console.log('[GEOCALOTE]: Email received')
-                client.stopMessageListener()
-
-                return client.findMessage(messages[0]._id).then(msg => {
-                    console.log('[GEOCALOTE]: Gennerating set password url')
-                    const { html } = msg.body
-                    const matches = html.match(expression)
-                    const createdPasswordURL = matches[1]
-
-                    const newPassword = createdPasswordURL.split('www.geoguessr.com')[1]
-                    console.log('[GEOCALOTE]: Redirecting to password page')
-                    window.location.href = newPassword
-                })
-            }
-        })
-    }
-}
-
-
-},{"axios":40,"tmpmail":69}],40:[function(require,module,exports){
 module.exports = require('./lib/axios');
-},{"./lib/axios":42}],41:[function(require,module,exports){
+},{"./lib/axios":41}],40:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -8855,7 +8791,7 @@ module.exports = function xhrAdapter(config) {
   });
 };
 
-},{"../core/buildFullPath":48,"../core/createError":49,"./../core/settle":53,"./../helpers/buildURL":57,"./../helpers/cookies":59,"./../helpers/isURLSameOrigin":62,"./../helpers/parseHeaders":64,"./../utils":67}],42:[function(require,module,exports){
+},{"../core/buildFullPath":47,"../core/createError":48,"./../core/settle":52,"./../helpers/buildURL":56,"./../helpers/cookies":58,"./../helpers/isURLSameOrigin":61,"./../helpers/parseHeaders":63,"./../utils":66}],41:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -8913,7 +8849,7 @@ module.exports = axios;
 // Allow use of default import syntax in TypeScript
 module.exports.default = axios;
 
-},{"./cancel/Cancel":43,"./cancel/CancelToken":44,"./cancel/isCancel":45,"./core/Axios":46,"./core/mergeConfig":52,"./defaults":55,"./helpers/bind":56,"./helpers/isAxiosError":61,"./helpers/spread":65,"./utils":67}],43:[function(require,module,exports){
+},{"./cancel/Cancel":42,"./cancel/CancelToken":43,"./cancel/isCancel":44,"./core/Axios":45,"./core/mergeConfig":51,"./defaults":54,"./helpers/bind":55,"./helpers/isAxiosError":60,"./helpers/spread":64,"./utils":66}],42:[function(require,module,exports){
 'use strict';
 
 /**
@@ -8934,7 +8870,7 @@ Cancel.prototype.__CANCEL__ = true;
 
 module.exports = Cancel;
 
-},{}],44:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 'use strict';
 
 var Cancel = require('./Cancel');
@@ -8993,14 +8929,14 @@ CancelToken.source = function source() {
 
 module.exports = CancelToken;
 
-},{"./Cancel":43}],45:[function(require,module,exports){
+},{"./Cancel":42}],44:[function(require,module,exports){
 'use strict';
 
 module.exports = function isCancel(value) {
   return !!(value && value.__CANCEL__);
 };
 
-},{}],46:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -9150,7 +9086,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = Axios;
 
-},{"../helpers/buildURL":57,"../helpers/validator":66,"./../utils":67,"./InterceptorManager":47,"./dispatchRequest":50,"./mergeConfig":52}],47:[function(require,module,exports){
+},{"../helpers/buildURL":56,"../helpers/validator":65,"./../utils":66,"./InterceptorManager":46,"./dispatchRequest":49,"./mergeConfig":51}],46:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -9206,7 +9142,7 @@ InterceptorManager.prototype.forEach = function forEach(fn) {
 
 module.exports = InterceptorManager;
 
-},{"./../utils":67}],48:[function(require,module,exports){
+},{"./../utils":66}],47:[function(require,module,exports){
 'use strict';
 
 var isAbsoluteURL = require('../helpers/isAbsoluteURL');
@@ -9228,7 +9164,7 @@ module.exports = function buildFullPath(baseURL, requestedURL) {
   return requestedURL;
 };
 
-},{"../helpers/combineURLs":58,"../helpers/isAbsoluteURL":60}],49:[function(require,module,exports){
+},{"../helpers/combineURLs":57,"../helpers/isAbsoluteURL":59}],48:[function(require,module,exports){
 'use strict';
 
 var enhanceError = require('./enhanceError');
@@ -9248,7 +9184,7 @@ module.exports = function createError(message, config, code, request, response) 
   return enhanceError(error, config, code, request, response);
 };
 
-},{"./enhanceError":51}],50:[function(require,module,exports){
+},{"./enhanceError":50}],49:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -9332,7 +9268,7 @@ module.exports = function dispatchRequest(config) {
   });
 };
 
-},{"../cancel/isCancel":45,"../defaults":55,"./../utils":67,"./transformData":54}],51:[function(require,module,exports){
+},{"../cancel/isCancel":44,"../defaults":54,"./../utils":66,"./transformData":53}],50:[function(require,module,exports){
 'use strict';
 
 /**
@@ -9376,7 +9312,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
   return error;
 };
 
-},{}],52:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 'use strict';
 
 var utils = require('../utils');
@@ -9465,7 +9401,7 @@ module.exports = function mergeConfig(config1, config2) {
   return config;
 };
 
-},{"../utils":67}],53:[function(require,module,exports){
+},{"../utils":66}],52:[function(require,module,exports){
 'use strict';
 
 var createError = require('./createError');
@@ -9492,7 +9428,7 @@ module.exports = function settle(resolve, reject, response) {
   }
 };
 
-},{"./createError":49}],54:[function(require,module,exports){
+},{"./createError":48}],53:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -9516,7 +9452,7 @@ module.exports = function transformData(data, headers, fns) {
   return data;
 };
 
-},{"./../defaults":55,"./../utils":67}],55:[function(require,module,exports){
+},{"./../defaults":54,"./../utils":66}],54:[function(require,module,exports){
 (function (process){(function (){
 'use strict';
 
@@ -9654,7 +9590,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 module.exports = defaults;
 
 }).call(this)}).call(this,require('_process'))
-},{"./adapters/http":41,"./adapters/xhr":41,"./core/enhanceError":51,"./helpers/normalizeHeaderName":63,"./utils":67,"_process":9}],56:[function(require,module,exports){
+},{"./adapters/http":40,"./adapters/xhr":40,"./core/enhanceError":50,"./helpers/normalizeHeaderName":62,"./utils":66,"_process":9}],55:[function(require,module,exports){
 'use strict';
 
 module.exports = function bind(fn, thisArg) {
@@ -9667,7 +9603,7 @@ module.exports = function bind(fn, thisArg) {
   };
 };
 
-},{}],57:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -9739,7 +9675,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
   return url;
 };
 
-},{"./../utils":67}],58:[function(require,module,exports){
+},{"./../utils":66}],57:[function(require,module,exports){
 'use strict';
 
 /**
@@ -9755,7 +9691,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
     : baseURL;
 };
 
-},{}],59:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -9810,7 +9746,7 @@ module.exports = (
     })()
 );
 
-},{"./../utils":67}],60:[function(require,module,exports){
+},{"./../utils":66}],59:[function(require,module,exports){
 'use strict';
 
 /**
@@ -9826,7 +9762,7 @@ module.exports = function isAbsoluteURL(url) {
   return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
 };
 
-},{}],61:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 'use strict';
 
 /**
@@ -9839,7 +9775,7 @@ module.exports = function isAxiosError(payload) {
   return (typeof payload === 'object') && (payload.isAxiosError === true);
 };
 
-},{}],62:[function(require,module,exports){
+},{}],61:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -9909,7 +9845,7 @@ module.exports = (
     })()
 );
 
-},{"./../utils":67}],63:[function(require,module,exports){
+},{"./../utils":66}],62:[function(require,module,exports){
 'use strict';
 
 var utils = require('../utils');
@@ -9923,7 +9859,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
   });
 };
 
-},{"../utils":67}],64:[function(require,module,exports){
+},{"../utils":66}],63:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -9978,7 +9914,7 @@ module.exports = function parseHeaders(headers) {
   return parsed;
 };
 
-},{"./../utils":67}],65:[function(require,module,exports){
+},{"./../utils":66}],64:[function(require,module,exports){
 'use strict';
 
 /**
@@ -10007,7 +9943,7 @@ module.exports = function spread(callback) {
   };
 };
 
-},{}],66:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 'use strict';
 
 var pkg = require('./../../package.json');
@@ -10114,7 +10050,7 @@ module.exports = {
   validators: validators
 };
 
-},{"./../../package.json":68}],67:[function(require,module,exports){
+},{"./../../package.json":67}],66:[function(require,module,exports){
 'use strict';
 
 var bind = require('./helpers/bind');
@@ -10465,31 +10401,36 @@ module.exports = {
   stripBOM: stripBOM
 };
 
-},{"./helpers/bind":56}],68:[function(require,module,exports){
+},{"./helpers/bind":55}],67:[function(require,module,exports){
 module.exports={
-  "_from": "axios@^0.21.1",
+  "_args": [
+    [
+      "axios@0.21.4",
+      "/home/izaias/dev/FreeGeoguessr"
+    ]
+  ],
+  "_from": "axios@0.21.4",
   "_id": "axios@0.21.4",
   "_inBundle": false,
   "_integrity": "sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==",
   "_location": "/axios",
   "_phantomChildren": {},
   "_requested": {
-    "type": "range",
+    "type": "version",
     "registry": true,
-    "raw": "axios@^0.21.1",
+    "raw": "axios@0.21.4",
     "name": "axios",
     "escapedName": "axios",
-    "rawSpec": "^0.21.1",
+    "rawSpec": "0.21.4",
     "saveSpec": null,
-    "fetchSpec": "^0.21.1"
+    "fetchSpec": "0.21.4"
   },
   "_requiredBy": [
     "/"
   ],
   "_resolved": "https://registry.npmjs.org/axios/-/axios-0.21.4.tgz",
-  "_shasum": "c67b90dc0568e5c1cf2b0b858c43ba28e2eda575",
-  "_spec": "axios@^0.21.1",
-  "_where": "/home/izaias/dev/personal/geocalote",
+  "_spec": "0.21.4",
+  "_where": "/home/izaias/dev/FreeGeoguessr",
   "author": {
     "name": "Matt Zabriskie"
   },
@@ -10499,7 +10440,6 @@ module.exports={
   "bugs": {
     "url": "https://github.com/axios/axios/issues"
   },
-  "bundleDependencies": false,
   "bundlesize": [
     {
       "path": "./dist/axios.min.js",
@@ -10509,7 +10449,6 @@ module.exports={
   "dependencies": {
     "follow-redirects": "^1.14.0"
   },
-  "deprecated": false,
   "description": "Promise based HTTP client for the browser and node.js",
   "devDependencies": {
     "coveralls": "^3.0.0",
@@ -10578,7 +10517,7 @@ module.exports={
   "version": "0.21.4"
 }
 
-},{}],69:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 (function (Buffer){(function (){
 
 'use strict';
@@ -10837,4 +10776,54 @@ function Login(address) {
 module.exports = { Create, Login };
 
 }).call(this)}).call(this,require("buffer").Buffer)
-},{"buffer":3,"https":6}]},{},[39]);
+},{"buffer":3,"https":6}],69:[function(require,module,exports){
+const axios = require('axios')
+const TmpMail = require('tmpmail')
+const expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi
+
+document.addEventListener("keydown", function(event) {
+    if (event.altKey && event.code === "KeyG") {
+        console.log('[GEOCALOTE]: Captured shortcut keydown')
+        generateAccount()
+        event.preventDefault()
+    }
+})
+
+async function generateAccount () {    
+    const client = TmpMail.Create()
+    return client.on('ready', async email => {
+        console.log('[GEOCALOTE]: Temp mail is ready')
+        await sendEmail(email)
+        return await verifyIfReceived(client)
+    })
+
+    async function sendEmail(email) {
+        console.log('[GEOCALOTE]: Signing up with as', email)
+        await axios.post('https://www.geoguessr.com/api/v3/accounts/signup', { email })
+    }
+
+    async function verifyIfReceived(client) {
+        console.log('[GEOCALOTE]: Verifying temp mail inbox')
+    
+        return client.startMessageListener(500, messages => {
+            if (messages.length > 0) {
+                console.log('[GEOCALOTE]: Email received')
+                client.stopMessageListener()
+    
+                return client.findMessage(messages[0]._id).then(msg => {
+                    console.log('[GEOCALOTE]: Gennerating set password url')
+                    const { html } = msg.body
+                    const matches = html.match(expression)
+                    const createdPasswordURL = matches[1]
+    
+                    const newPassword = createdPasswordURL.split('www.geoguessr.com')[1]
+                    console.log('[GEOCALOTE]: Redirecting to password page')
+                    window.location.href = newPassword
+                })
+            }
+        })
+    }
+}
+
+
+},{"axios":39,"tmpmail":68}]},{},[69]);
